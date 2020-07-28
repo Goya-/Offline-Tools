@@ -30,6 +30,17 @@ func generate(cmd *cobra.Command, args []string) {
 	fmt.Println("keystore file:", fileName)
 }
 
+func privToPub(cmd *cobra.Command, args []string) {
+	pubKey, err := account.PrivatekeyToPublickey(args[0])
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	readablePubKey := hex.EncodeToString(pubKey)
+	fmt.Println("public key:", readablePubKey)
+}
+
 func recoverByMnemonic(cmd *cobra.Command, args []string) {
 	if len(args) != 24 {
 		fmt.Println("args error")
@@ -111,6 +122,7 @@ func init() {
 	cmdCover.AddCommand(cmdCoverByMnemonic)
 	rootCmd.AddCommand(cmdCover)
 	rootCmd.AddCommand(cmdVersion)
+	rootCmd.AddCommand(cmdPrivToPub)
 }
 
 //execute used to execute cobra command
@@ -139,6 +151,12 @@ var cmdGenerate = &cobra.Command{
 	Use:   "generate [password]",
 	Short: "generate account",
 	Run:   generate,
+}
+
+var cmdPrivToPub = &cobra.Command{
+	Use:   "toPub [privateKey]",
+	Short: "private to public",
+	Run:   privToPub,
 }
 
 var cmdCover = &cobra.Command{
